@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <title>reveal.js</title>
+
+    <link rel="stylesheet" href="dist/reset.css" />
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/black.css" />
+    <style>
+      p,
+      li {
+        font-size: 32px;
+      }
+    </style>
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <div>
+            <h3>Git Advanced</h3>
+          </div>
+        </section>
+        <section>
+          <h3>Система витления</h3>
+          <img src="img/01 Git branch.svg" alt="" />
+        </section>
+        <section>
+          <h3>Создание веток</h3>
+          <pre><code data-line-numbers="">git branch  - вывод всех веток
+git branch <название ветки> - создание новой ветки без переключения на неё
+git branch -d <название ветки> - безапасное удаление ветки
+git branch -D <название ветки> - принудительное удаление ветки
+git branch -m <название ветки> - изменение имени текущей ветки на указаную
+git branch -a - вывод всех удаленных веток
+          </code></pre>
+        </section>
+        <section>
+          <h3>Процесс создание ветки</h3>
+          <p>
+            Важно понимать, что ветки — это просто указатели на коммиты. Когда
+            вы создаете ветку, Git просто создает новый указатель. Репозиторий
+            при этом никак не изменяется. Допустим, вы начинаете работать с
+            репозиторием, который выглядит так:
+          </p>
+          <img src="img/02 Creating branches.svg" alt="" />
+        </section>
+        <section>
+          <h3>Процесс создание ветки</h3>
+          <p>Затем вы создаете новую ветку с помощью следующей команды.</p>
+          <pre><code>git branch crazy-experiment</code></pre>
+          <p>
+            История репозитория остается неизменной. Все, что вы получаете, —
+            это новый указатель на текущий коммит:
+          </p>
+          <img src="img/03 Creating branches.svg" alt="" />
+        </section>
+        <section>
+          <h3>Переключение веток</h3>
+          <p>
+            Команда git checkout позволяет перемещаться между ветками,
+            созданными командой git branch.
+          </p>
+          <pre><code>git checkout <Название ветки></code></pre>
+        </section>
+        <section>
+          <h3>Переключение и создание одновременно</h3>
+          <p>
+            Команда git checkout также принимает аргумент -b, который действует
+            как вспомогательный метод, позволяя создать новую ветку и сразу
+            переключиться на нее.
+          </p>
+          <pre><code>git checkout -b ＜new-branch＞</code></pre>
+        </section>
+        <section>
+          <h3>Перемещение от конкретной ветки</h3>
+          <p>
+            По умолчанию команда git checkout -b создает ветку новая-ветка от
+            текущего указателя HEAD. Команде git checkout можно передать
+            необязательный параметр с указанием ветки. С помощью команды ниже
+            можно создать ветку от уже существующей ветки, а не от указателя
+            HEAD:
+          </p>
+          <pre><code>git checkout -b ＜new-branch＞ ＜existing-branch＞</code></pre>
+        </section>
+        <section>
+          <h3>Переключение в удаленных ветках</h3>
+          <p>
+            В современных версиях Git переключение на удаленную ветку не
+            отличается от переключения на локальную ветку. Единственно что нужно
+            сделать это сначала получить все удаленные ветки.
+          </p>
+          <pre><code>git fetch --all - вытащить всё содержимое из удаленного репозитория
+git checkout ＜remotebranch＞</code></pre>
+        </section>
+        <section>
+          <h3>Слияние веток</h3>
+          <p>
+            Слияние используется в Git, чтобы собрать воедино разветвленную
+            историю. Команда git merge выполняет слияние отдельных направлений
+            разработки, созданных с помощью команды git branch, в единую ветку.
+          </p>
+        </section>
+        <section>
+          <h3>Процесс слияния</h3>
+          <p>
+            Представим, что у нас есть новая функциональная ветка, которая
+            отходит от главной ветки main. И мы хотим объединить эту
+            функциональную ветку с main
+          </p>
+          <img src="img/01 Branch-2 kopiera.png" alt="" />
+        </section>
+        <section>
+          <h3>Процесс слияния</h3>
+          <p>
+            При вызове git merge произойдет слияние указанной функциональной
+            ветки с текущей — в данном случае с веткой main. Git автоматически
+            определяет алгоритм слияния.
+          </p>
+          <img src="img/02 Branch-1 kopiera.png" alt="" />
+        </section>
+        <section>
+          <h3>Процесс слияния</h3>
+          <p>
+            Коммиты слияния отличаются от других наличием двух родительских
+            элементов. Создавая коммит слияния, Git попытается автоматически
+            объединить две истории. Однако если Git обнаружит, что вы изменили
+            одну и ту же часть данных в обеих историях, сделать это
+            автоматически не удастся. Это называется конфликтом управления
+            версиями, и для его разрешения Git потребуются действия
+            пользователя.
+          </p>
+        </section>
+        <section>
+          <h3>Подготовка к слиянию</h3>
+          <h5>Проверка выбора принимающей ветки</h5>
+          <p>
+            Выполните команду git status. Это позволит убедиться, что HEAD
+            указывает на ветку, принимающую результаты слияния. При
+            необходимости выполните команду git checkout <принимающая-ветка>,
+            чтобы переключиться на принимающую ветку. Для примера выполним
+            команду git checkout main
+          </p>
+        </section>
+        <section>
+          <h3>Подготовка к слиянию</h3>
+          <h5>Выполнение слияния</h5>
+          <p>
+            Для слияния нужно выполнить команду git merge <название ветки>,
+            которая будет объединена с принимающей. В нашем случае git merge
+            feature
+          </p>
+        </section>
+        <section>
+          <h3>Виды слияния</h3>
+          <h5>Ускоренное слияние</h5>
+          <p>
+            Ускоренное слияние происходит, когда последний коммит текущей ветки
+            является прямым продолжением целевой ветки. В этом случае для
+            объединения истории Git не выполняет полноценное слияние, а просто
+            переносит указатель текущей ветки в конец целевой ветки. Объединение
+            историй проходит успешно, поскольку все коммиты целевой ветки теперь
+            доступны из текущей ветки.
+          </p>
+        </section>
+        <section>
+          <h3>Виды слияния</h3>
+          <h5>Ускоренное слияние</h5>
+          <img
+            src="img/03-04 Fast forward merge.svg"
+            height="500"
+            width="500"
+          />
+        </section>
+        <section>
+          <h3>Виды слияния</h3>
+          <h5>Трехстороннее слияние</h5>
+          <p>
+            Однако выполнить ускоренное слияние не получится, если ветки после
+            разделения развивались независимо друг от друга. Если до целевой
+            ветки нет прямого пути, Git будет вынужден объединить их методом
+            трехстороннего слияния. Такое слияние выполняется с помощью
+            специального коммита, который служит для объединения двух историй.
+            Метод называется трехсторонним, поскольку Git использует три коммита
+            для создания коммита слияния (последние коммиты двух веток и общий
+            родительский элемент)
+          </p>
+        </section>
+        <section>
+          <h3>Виды слияния</h3>
+          <h5>Трехстороннее слияние</h5>
+          <img src="img/05-06 Fast forward merge.svg" alt="" / height="500"
+          width="500">
+        </section>
+        <section>
+          <h3>Пример ускоренного слияния</h3>
+          <pre><code># Start a new feature
+git checkout -b new-feature main
+# Edit some files
+git add <название файла>
+git commit -m "Start a feature"
+# Edit some files
+git add <название файла>
+git commit -m "Finish a feature"
+# Merge in the new-feature branch
+git checkout main
+git merge new-feature
+git branch -d new-feature</code></pre>
+        </section>
+        <section>
+          <h3>Пример трехстороннего слияния</h3>
+          <pre><code>Start a new feature
+git checkout -b new-feature main
+# Edit some files
+git add <название файла>
+git commit -m "Start a feature"
+# Edit some files
+git add <название файла>
+git commit -m "Finish a feature"
+# Develop the main branch
+git checkout main
+# Edit some files
+git add <название файла>
+git commit -m "Make some super-stable changes to main"
+# Merge in the new-feature branch
+git merge new-feature
+git branch -d new-feature</code></pre>
+        </section>
+        <section>
+          <h3>Конфликты</h3>
+          <p>
+            При попытке объединить ветки, в которых изменена одна и та же часть
+            того же файла, Git не сможет сделать выбор между версиями. В таком
+            случае операция останавливается прямо перед созданием коммита
+            слияния, чтобы пользователь вручную разрешил конфликты.
+          </p>
+          <p>
+            Преимущество слияния в Git заключается в том, что разрешение
+            конфликтов при слиянии проходит по привычной схеме «редактирование —
+            индексирование — коммит»
+          </p>
+        </section>
+        <section>
+          <h3>Конфликты</h3>
+          <p>
+            При обнаружении конфликта выполните команду git status, чтобы
+            увидеть, какие файлы необходимо исправить. Так, если в обеих ветках
+            изменена одна и та же часть файла hello.py, вы увидите следующее:
+          </p>
+          <pre><code>On branch main
+Unmerged paths:
+(use "git add/rm ..." as appropriate to mark resolution)
+both modified: hello.py</code></pre>
+        </section>
+        <section>
+          <h3>Как вяглядят конфликты</h3>
+          <p>
+            Если система Git столкнется с конфликтом во время слияния, она
+            отредактирует содержимое затронутых файлов с помощью визуальных
+            индикаторов, обозначающих обе стороны конфликтующего содержимого.
+            Вот эти визуальные маркеры: <<<<<<<, ======= и >>>>>>>. Их полезно
+            поискать в проекте во время слияния, чтобы определить, где
+            необходимо урегулировать конфликты.
+          </p>
+          <pre><code>here is some content not affected by the conflict
+<<<<<<< main
+this is conflicted text from main
+=======
+this is conflicted text from feature branch
+>>>>>>> feature branch;</code></pre>
+        </section>
+        <section>
+          <h3>Создание конфликта своими руками</h3>
+          <pre><code>$ mkdir git-merge-test
+$ cd git-merge-test
+$ git init .
+$ echo "this is some content to mess with" > merge.txt
+$ git add merge.txt
+$ git commit -am "we are commiting the inital content"
+[main (root-commit) d48e74c] we are commiting the inital content
+1 file changed, 1 insertion(+)
+create mode 100644 merge.txt</code></pre>
+        </section>
+        <section>
+          <h3>Создание конфликта своими руками</h3>
+          <pre><code>$ git checkout -b new_branch_to_merge_later
+$ echo "totally different content to merge later" > merge.txt
+$ git commit -am "edited the content of merge.txt to cause a conflict"
+[new_branch_to_merge_later 6282319] edited the content of merge.txt to cause a conflict
+1 file changed, 1 insertion(+), 1 deletion(-)</code></pre>
+        </section>
+        <section>
+          <h3>Создание конфликта своими руками</h3>
+          <pre><code>git checkout main
+Switched to branch 'main'
+echo "content to append" >> merge.txt
+git commit -am "appended content to merge.txt"
+[main 24fbe3c] appended content to merge.tx
+1 file changed, 1 insertion(+)</code></pre>
+        </section>
+        <section>
+          <h3>Создание конфликта своими руками</h3>
+          <pre><code>git merge new_branch_to_merge_later
+Auto-merging merge.txt
+CONFLICT (content): Merge conflict in merge.txt
+Automatic merge failed; fix conflicts and then commit the result.</code></pre>
+        </section>
+        <section>
+          <h3>Создание конфликта своими руками</h3>
+          <pre><code>$ git status
+On branch main
+You have unmerged paths.
+(fix conflicts and run "git commit")
+(use "git merge --abort" to abort the merge)
+
+Unmerged paths:
+(use "git add <название файла>..." to mark resolution)
+
+both modified:   merge.txt</code></pre>
+        </section>
+        <section>
+          <h3>Исправление конфликта</h3>
+          <pre><code>$ cat merge.txt
+<<<<<<< HEAD
+this is some content to mess with
+content to append
+=======
+totally different content to merge later
+>>>>>>> new_branch_to_merge_later</code></pre>
+        </section>
+        <section>
+          <h3>Исправление конфликта</h3>
+          <pre><code>git commit -m "merged and resolved the conflict in merge.txt"</code></pre>
+        </section>
+        <section>
+          <h3>Отмена слияние</h3>
+          <p>
+            Если нам нужно отменить слияние для этого есть специальная команда
+          </p>
+          <pre><code>git merge --abort</code></pre>
+        </section>
+        <section>
+          <h3>Отправка другой ветки на сервер</h3>
+          <pre><code>git push origin feature</code></pre>
+          <p>origin - remote</p>
+          <p>feature - название вашей ветки</p>
+        </section>
+        <section>
+          <h3>Git squash</h3>
+          <p>
+            Git squash — это прием, который помогает взять серию коммитов и
+            уплотнить ее. Например, предположим: у вас есть серия из N коммитов
+            и вы можете путем сжатия преобразовать ее в один-единственный
+            коммит. Сжатие через git squash в основном применяется, чтобы
+            превратить большое число малозначимых коммитов в небольшое число
+            значимых. Так становится легче отслеживать историю Git
+          </p>
+        </section>
+        <section>
+          <h3>Пример squash</h3>
+          <pre><code>git rebase -i HEAD~6</code></pre>
+          <img src="img/squash.png" alt="" />
+        </section>
+        <section>
+          <h3>Пример squash</h3>
+          <p>
+            pick или p будет использовать только эти коммиты, но squash или s
+            будет использовать их и объединить их все вместе.
+          </p>
+        </section>
+        <section>
+          <h3>Squash merge</h3>
+          <pre><code>git merge --squash target_branch_name</code></pre>
+          <img src="img/squash-merge.png" alt="" />
+        </section>
+        <section>
+          <h3>Pull requests</h3>
+          <img src="img/pull_requests.png" alt="" height="500" />
+        </section>
+      </div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      // More info about initialization & config:
+      // - https://revealjs.com/initialization/
+      // - https://revealjs.com/config/
+      Reveal.initialize({
+        hash: true,
+        touch: true,
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+      });
+
+      // $("pre code").each(function(){
+      //     var html = $(this).html();
+      //     var pattern = html.match(/\s*\n[\t\s]*/);
+      //     $(this).html(html.replace(new RegExp(pattern, "g"),'\n'));
+      // });
+    </script>
+  </body>
+</html>
